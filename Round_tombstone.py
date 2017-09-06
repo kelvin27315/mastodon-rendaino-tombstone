@@ -126,3 +126,60 @@ if early_parti > 0:
         toot += temp
     #print(toot)
     mastodon.status_post(status = toot, visibility = "unlisted")
+
+
+
+#HTL用
+round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
+multi_turn = 0
+toots = mastodon.timeline_home(limit = 40)
+while True:
+    time = dt.time(
+        int(toots[-1]["created_at"][11:13]), int(toots[-1]["created_at"][14:16]),
+        int(toots[-1]["created_at"][17:19]), int(toots[-1]["created_at"][20:23])*1000)
+    #取得したget_toots全てのtootが29分より前の場合終了
+    if time <= time29:
+        break
+
+    #取得するtootのidを指定
+    m_id = toots[-1]["id"] - 1
+    s_id = toots[-1]["id"] - 41
+    toots = mastodon.timeline_home(max_id = m_id, since_id = s_id) + toots
+    toots = sorted(toots, key=lambda x:x['id'])
+    toots.reverse()
+#idでソート
+toots = sorted(toots, key=lambda x:x['id'])
+
+
+#tootをDataFrameに落とし込む
+for toot in toots:
+    time = dt.time(
+        int(toot["created_at"][11:13]), int(toot["created_at"][14:16]),
+        int(toot["created_at"][17:19]), int(toot["created_at"][20:23])*1000)
+    if time29 <= time and time <= time31:
+        if "public" != toot["visibility"]:
+            if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
+                round_toots = round_toots.append(pd.DataFrame({
+                    "username":[toot["account"]["username"]],
+                    "display_name":[toot["account"]["display_name"]],
+                    "created_at":[time]}))
+
+#複数回回した人を数える
+for i in round_toots["username"].value_counts():
+    if i > 1:
+        multi_turn += 1
+
+#人数のダブりを削る
+round_toots = round_toots.drop_duplicates(["username"])
+round_toots = round_toots.reset_index(drop = True)
+participation = int(len(round_toots.index))    #参加者人数
+
+#時刻報告
+if participation > 0:
+    toot = ""
+    for i,rank in round_toots.iterrows():
+        toot = "@" + rank["username"] + " " + rank["display_name"] + " [02" + str(rank["created_at"])[2:12] +"]\n"
+        #print(toot)
+        mastodon.status_post(status= toot, visibility = 'direct')
+        all_text = all_text + toot + "\n"
+        toot = ""
