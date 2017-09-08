@@ -14,5 +14,8 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2017-09-09
+- コードの修正
+
 2017-09-07
 - 未収歳・非公開・@Rendaino_tombstoneへのダイレクトのtootに対応しました。</br>現状では時刻を返すだけで順位は返しません。
