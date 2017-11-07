@@ -20,19 +20,19 @@ class TestRoundTombstone(unittest.TestCase):
         rt.mastodon.timeline.side_effect = [
 # timeline取得 1回目
             [
-                { 'id': 10, 'created_at': '2017-11-04T17:29:00.000+00:00', 'content': 'ズズズ', 'account': { 'username': 'reimu', 'display_name': '霊夢', } },
-                { 'id': 11, 'created_at': '2017-11-04T17:30:00.000+00:00', 'content': 'ｽﾞｽﾞｽﾞ', 'account': { 'username': 'marisa', 'display_name': '魔理沙', } },
-                { 'id': 12, 'created_at': '2017-11-04T17:30:00.000+00:00', 'content': 'コスズ', 'account': { 'username': 'kosuzu', 'display_name': '小鈴', } },
+                { 'id': 10, 'created_at': '2017-11-04T17:29:00.000Z', 'content': 'ズズズ', 'account': { 'username': 'reimu', 'display_name': '霊夢', } },
+                { 'id': 11, 'created_at': '2017-11-04T17:30:00.000Z', 'content': 'ｽﾞｽﾞｽﾞ', 'account': { 'username': 'marisa', 'display_name': '魔理沙', } },
+                { 'id': 12, 'created_at': '2017-11-04T17:30:00.000Z', 'content': 'コスズ', 'account': { 'username': 'kosuzu', 'display_name': '小鈴', } },
             ],
 # timeline取得 2回目
             [
-                { 'id': 8, 'created_at': '2017-11-04T17:29:00.000+00:00', 'content': 'ズズズ', 'account': { 'username': 'sakuya', 'display_name': '咲夜', } },
-                { 'id': 9, 'created_at': '2017-11-04T17:29:00.000+00:00', 'content': 'ズズズ', 'account': { 'username': 'sanae', 'display_name': '早苗', } },
+                { 'id': 8, 'created_at': '2017-11-04T17:29:00.000Z', 'content': 'ズズズ', 'account': { 'username': 'sakuya', 'display_name': '咲夜', } },
+                { 'id': 9, 'created_at': '2017-11-04T17:29:00.000Z', 'content': 'ズズズ', 'account': { 'username': 'sanae', 'display_name': '早苗', } },
             ],
 # timeline取得 3回目。実際には呼ばれない
 # BUG: 29:00.000を含めるかどうかがget_timelineとselect_tootsで一致していない
             [
-                { 'id': 7, 'created_at': '2017-11-04T17:29:00.000+00:00', 'content': 'ズズズ', 'account': { 'username': 'akyu', 'display_name': '阿求', } },
+                { 'id': 7, 'created_at': '2017-11-04T17:29:00.000Z', 'content': 'ズズズ', 'account': { 'username': 'akyu', 'display_name': '阿求', } },
             ],
         ]
         results = rt.get_timeline('local')
@@ -44,10 +44,10 @@ class TestRoundTombstone(unittest.TestCase):
     def test_select_toots(self):
         toots = [
 # positive
-            { 'id': 10, 'created_at': '2017-11-04T17:29:00.000+00:00', 'content': 'ズズズ', 'account': { 'username': 'reimu', 'display_name': '霊夢', } },
-            { 'id': 11, 'created_at': '2017-11-04T17:30:00.000+00:00', 'content': 'ｽﾞｽﾞｽﾞ', 'account': { 'username': 'marisa', 'display_name': '魔理沙', } },
+            { 'id': 10, 'created_at': '2017-11-04T17:29:00.000Z', 'content': 'ズズズ', 'account': { 'username': 'reimu', 'display_name': '霊夢', } },
+            { 'id': 11, 'created_at': '2017-11-04T17:30:00.000Z', 'content': 'ｽﾞｽﾞｽﾞ', 'account': { 'username': 'marisa', 'display_name': '魔理沙', } },
 # negative
-            { 'id': 12, 'created_at': '2017-11-04T17:30:00.000+00:00', 'content': 'コスズ', 'account': { 'username': 'kosuzu', 'display_name': '小鈴', } },
+            { 'id': 12, 'created_at': '2017-11-04T17:30:00.000Z', 'content': 'コスズ', 'account': { 'username': 'kosuzu', 'display_name': '小鈴', } },
         ]
         results = rt.select_toots(toots)
         self.assertEqual(['reimu','marisa'], list(results['username']))
