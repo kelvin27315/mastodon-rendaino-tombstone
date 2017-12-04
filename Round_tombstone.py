@@ -26,9 +26,7 @@ def get_timeline(tl_type):
     ***REMOVED***
     toots = mastodon.timeline(timeline = tl_type, limit = 40)
     while True:
-        time = dt.time(
-            int(toots[-1]["created_at"][11:13]), int(toots[-1]["created_at"][14:16]),
-            int(toots[-1]["created_at"][17:19]), int(toots[-1]["created_at"][20:23])*1000)
+        time = dt.time(toots[-1]["created_at"].hour, toots[-1]["created_at"].minute, toots[-1]["created_at"].second, toots[-1]["created_at"].microsecond)
         #取得したget_toots全てのtootが29分より前の場合終了
         if time <= TIME29:
             break
@@ -44,9 +42,7 @@ def select_toots(toots):
     ***REMOVED***
     round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
     for toot in toots:
-        time = dt.time(
-            int(toot["created_at"][11:13]), int(toot["created_at"][14:16]),
-            int(toot["created_at"][17:19]), int(toot["created_at"][20:23])*1000)
+        time = dt.time(toot["created_at"].hour, toot["created_at"].minute, toot["created_at"].second, toot["created_at"].microsecond)
         if TIME29 <= time and time <= TIME31:
             if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
                 round_toots = round_toots.append(pd.DataFrame({
@@ -93,26 +89,26 @@ def toot_number_rotated(participation, early_parti, multi_turn):
     toots = get_timeline(tl_type = "local")
     #データの整形
     round_toots = select_toots(toots = toots)
-    
+
     #複数回回した人を数える
     for i in round_toots["username"].value_counts():
         if i > 1:
             multi_turn += 1
-    
+
     #人数のダブりを削る
     round_toots = round_toots.drop_duplicates(["username"])
     round_toots = round_toots.reset_index(drop = True)
-    
+
     #30分よりまえ、以降で回した人に分ける
     rotated_early = round_toots[round_toots.created_at < TIME30]
     rotated_just = round_toots[round_toots.created_at >= TIME30]
     rotated_just = rotated_just.reset_index(drop = True)
     participation = int(len(round_toots.index))    #参加者人数
     early_parti = int(len(rotated_early.index))
-    
+
     #回転数についてtootする
     toot_number_rotated(participation = participation, early_parti = early_parti, multi_turn = multi_turn)
-    
+
     #ランキング表記
     if participation > 0:
         toot = ""
@@ -123,7 +119,7 @@ def toot_number_rotated(participation, early_parti, multi_turn):
                 toot = ""
             toot += temp
         mastodon.status_post(status = toot, visibility = "unlisted")
-    
+
     #早回し表記
     if early_parti > 0:
         toot = "2時30分より前に回したtootです。\n"
@@ -134,21 +130,19 @@ def toot_number_rotated(participation, early_parti, multi_turn):
                 toot = "2時30分より前に回したtoot、続き。\n"
             toot += temp
         mastodon.status_post(status = toot, visibility = "unlisted")
-    
-    
+
+
     #HTL用
     round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
     toots = get_timeline(tl_type = "home")
     #round_toots = select_toots(toots = toots)
-    
+
     ***REMOVED***
     取得したtootのリストから必要なtootを抜き出し、
     必要な要素のラベルで構成されたDataFrameに落とし込む
     ***REMOVED***
     for toot in toots:
-        time = dt.time(
-            int(toot["created_at"][11:13]), int(toot["created_at"][14:16]),
-            int(toot["created_at"][17:19]), int(toot["created_at"][20:23])*1000)
+        time = dt.time(toot["created_at"].hour, toot["created_at"].minute, toot["created_at"].second, toot["created_at"].microsecond)
         if TIME29 <= time and time <= TIME31:
             if "public" != toot["visibility"]:
                 if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
@@ -156,13 +150,13 @@ def toot_number_rotated(participation, early_parti, multi_turn):
                         "username":[toot["account"]["username"]],
                         "display_name":[toot["account"]["display_name"]],
                         "created_at":[time]}))
-    
-    
+
+
     #人数のダブりを削る
     round_toots = round_toots.drop_duplicates(["username"])
     round_toots = round_toots.reset_index(drop = True)
     participation = int(len(round_toots.index))    #参加者人数
-    
+
     #時刻報告
     if participation > 0:
         toot = ""
