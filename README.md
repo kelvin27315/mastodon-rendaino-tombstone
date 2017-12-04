@@ -14,6 +14,13 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2017-12-04
+- Mastodon.py 1.1.2 に対応しました。
+- requirements.txt を追加しました。
+
+2017-11-11
+- Add unittest をmergeしました。
+
 2017-09-09
 - コードの修正
 
