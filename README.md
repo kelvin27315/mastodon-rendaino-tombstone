@@ -14,6 +14,10 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2017-12-11
+- add travis supportをmergeしました。
+- .travis.ymlで指定するpythonのversionを3.6にしました。
+
 2017-12-04
 - Mastodon.py 1.1.2 に対応しました。
 - requirements.txt を追加しました。
