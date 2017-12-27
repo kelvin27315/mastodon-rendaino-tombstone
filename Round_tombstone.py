@@ -69,9 +69,9 @@ def toot_number_rotated(participation, early_parti, multi_turn):
         else:
             #分数表記の判定
             if (participation % 4) == 2:
-                toot += str(int(participation / 4)) + "2分の" + str(int((participation % 4) / 2)) + "回転でした。"
+                toot += "2分の" + str(int((participation % 4) / 2)) + "回転でした。"
             else:
-                toot += str(int(participation / 4)) + "4分の" + str(participation % 4) + "回転でした。"
+                toot += "4分の" + str(participation % 4) + "回転でした。"
         #早回し判定
         if early_parti > 0:
             toot += "\nまた、2時30分になる前に回した人は" + str(early_parti) + "人"
