@@ -14,6 +14,9 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2017-12-27
+- 回転数が1回転未満の場合に不要な0が表示されるバグを修正しました。
+
 2017-12-11
 - add travis supportをmergeしました。
 - .travis.ymlで指定するpythonのversionを3.6にしました。

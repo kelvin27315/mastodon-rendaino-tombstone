@@ -62,12 +62,12 @@ class TestRoundTombstone(unittest.TestCase):
     def test_toot_number_rotated_1_participation(self):
         rt.toot_number_rotated(1, 0, 0)
 # BUG: 4人未満の場合に余計な0が付く
-        rt.mastodon.toot.assert_called_once_with(TODAY_STR + 'の墓石の回転は1人による04分の1回転でした。')
+        rt.mastodon.toot.assert_called_once_with(TODAY_STR + 'の墓石の回転は1人による4分の1回転でした。')
 
     def test_toot_number_rotated_2_participations(self):
         rt.toot_number_rotated(2, 0, 0)
 # BUG: 4人未満の場合に余計な0が付く
-        rt.mastodon.toot.assert_called_once_with(TODAY_STR + 'の墓石の回転は2人による02分の1回転でした。')
+        rt.mastodon.toot.assert_called_once_with(TODAY_STR + 'の墓石の回転は2人による2分の1回転でした。')
 
     def test_toot_number_rotated_4_participations(self):
         rt.toot_number_rotated(4, 0, 0)
