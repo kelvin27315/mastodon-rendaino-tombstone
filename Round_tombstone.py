@@ -9,7 +9,7 @@ import pandas as pd
     mastodon = Mastodon(
             client_id="clientcred.secret",
             access_token="usercred.secret",
-            api_base_url = "https://gensokyo.cloud")
+            api_base_url = "https://gensokyo.town")
 round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
 TIME29 = dt.time(17,29,0,0)
 TIME30 = dt.time(17,30,0,0)

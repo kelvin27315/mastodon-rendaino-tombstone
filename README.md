@@ -14,6 +14,9 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2018-01-06
+- gensokyo.townのみに対応
+
 2017-12-27
 - 回転数が1回転未満の場合に不要な0が表示されるバグを修正しました。
 
