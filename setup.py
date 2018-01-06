@@ -34,15 +34,6 @@ def log_in(client_file_neme, api_url, mail, password, user_file_name):
     )
 
 if __name__ == "__main__":
-    #gensokyo.cloud
-    create_app("clientcred_cloud.secret", "https://gensokyo.cloud")
-    log_in(
-        "clientcred_cloud.secret",
-        "https://gensokyo.cloud",
-        "*****@example.com",
-        "*****",
-        "usercred_cloud.secret"
-    )
     #gensokyo.town
     create_app("clientcred.secret", "https://gensokyo.town")
     log_in(
