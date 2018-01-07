@@ -1,15 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from mastodon import Mastodon
 import datetime as dt
 import pandas as pd
+from os import path
 
-if __name__ == "__main__":
-    #変数初期化
-    mastodon = Mastodon(
-            client_id="clientcred.secret",
-            access_token="usercred.secret",
-            api_base_url = "https://gensokyo.town")
+PATH = path.dirname(path.abspath(__file__)) + "/"
 round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
 TIME29 = dt.time(17,29,0,0)
 TIME30 = dt.time(17,30,0,0)
@@ -17,6 +11,12 @@ TIME31 = dt.time(17,31,0,0)
 TODAY = dt.date.today() #今日の日付
 multi_turn = 0
 
+if __name__ == "__main__":
+    #変数初期化
+    mastodon = Mastodon(
+            client_id = PATH + "clientcred.secret",
+            access_token = PATH + "usercred.secret",
+            api_base_url = "https://gensokyo.town")
 
 def get_timeline(tl_type):
     """
@@ -81,6 +81,30 @@ def toot_number_rotated(participation, early_parti, multi_turn):
         else:
             if multi_turn > 0:
                 toot += "2度以上回した人は" + str(multi_turn) + "人です。"
+
+    #合計回転数について
+    f = open(PATH + "sum_number_rotated.txt")
+    sum_num_rotated = int(f.read())
+    f.close()
+    sum_num_rotated += participation
+    f = open(PATH + "sum_number_rotated.txt","w")
+    f.write(str(sum_num_rotated))
+    f.close()
+    toot += "\n今日までの回転の合計数は"
+    if sum_num_rotated >= 4:
+        #分数表記の判定
+        if (sum_num_rotated % 4) == 0:
+            toot += str(int(sum_num_rotated / 4)) + "回転です。"
+        elif (sum_num_rotated % 4) == 2:
+            toot += str(int(sum_num_rotated / 4)) + "と2分の" + str(int((sum_num_rotated % 4) / 2)) + "回転です。"
+        else:
+            toot += str(int(sum_num_rotated / 4)) + "と4分の" + str(sum_num_rotated % 4) + "回転です。"
+    else:
+        #分数表記の判定
+        if (sum_num_rotated % 4) == 2:
+            toot += "2分の" + str(int((sum_num_rotated % 4) / 2)) + "回転です。"
+        else:
+            toot += "4分の" + str(sum_num_rotated % 4) + "回転です。"
     mastodon.toot(toot)
 
 if __name__ == "__main__":
