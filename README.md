@@ -14,6 +14,9 @@ Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で�
 
 ### 更新記録
 
+2018-01-08
+- 合計の回転数を表示
+
 2018-01-06
 - gensokyo.townのみに対応
 
