@@ -1,7 +1,8 @@
+from operator import itemgetter
+***REMOVED***
 ***REMOVED***
 import datetime as dt
 import pandas as pd
-***REMOVED***
 
 ***REMOVED***
 round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
@@ -32,7 +33,7 @@ def get_timeline(tl_type):
             break
         m_id = toots[-1]["id"] -1
         toots = toots + mastodon.timeline(timeline = tl_type, max_id = m_id, limit = 40)
-    toots = sorted(toots, key=lambda x:x['id'])
+    toots = sorted(toots, key=itemgetter("created_at"))
     return (toots)
 
 def select_toots(toots):
