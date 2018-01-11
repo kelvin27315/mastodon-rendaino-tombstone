@@ -13,7 +13,6 @@ TODAY = dt.date.today() #今日の日付
 multi_turn = 0
 
 ***REMOVED***
-    #変数初期化
     mastodon = Mastodon(
             client_id = PATH + "clientcred.secret",
             access_token = PATH + "usercred.secret",
@@ -52,27 +51,53 @@ def select_toots(toots):
                     "created_at":[time]}))
     return (round_toots)
 
+def count_rotation(rotation_count):
+    ***REMOVED***
+    回転数についての文を作る。
+    ***REMOVED***
+    toot = ""
+    if rotation_count >= 4:
+        #分数表記の判定
+        if (rotation_count % 4) == 0:
+            toot += str(int(rotation_count / 4)) + "回転です。"
+        elif (rotation_count % 4) == 2:
+            toot += str(int(rotation_count / 4)) + "と2分の1回転です。"
+        else:
+            toot += str(int(rotation_count / 4)) + "と4分の" + str(rotation_count % 4) + "回転です。"
+    else:
+        #分数表記の判定
+        if (rotation_count % 4) == 0:
+            toot += "0回転です。"
+        elif (rotation_count % 4) == 2:
+            toot += "2分の１回転です。"
+        else:
+            toot += "4分の" + str(rotation_count % 4) + "回転です。"
+    return(toot)
+
+def sum_number_rotated(participation):
+    ***REMOVED***
+    合計の回転数
+    ***REMOVED***
+    #今までの回転数に今回の回転数を足して保存
+    f = open(PATH + "sum_number_rotated.txt")
+    sum_num_rotated = int(f.read()) + participation
+    f.close()
+    f = open(PATH + "sum_number_rotated.txt","w")
+    f.write(str(sum_num_rotated))
+    f.close()
+
+    toot = "\n今日までの回転の合計数は"
+    toot += count_rotation(sum_num_rotated)
+    return(toot)
+
 def toot_number_rotated(participation, early_parti, multi_turn):
     #回転の有無の判定
     if participation == 0:
         toot = (str(TODAY.month) + '月' + str(TODAY.day) + "日の墓石は回転しませんでした。")
     else:
         toot = (str(TODAY.month) + '月' + str(TODAY.day) + "日の墓石の回転は" + str(participation) + "人による")
-        #一回転以上したかの判定
-        if participation >= 4:
-            #分数表記の判定
-            if (participation % 4) == 0:
-                toot += str(int(participation / 4)) + "回転でした。"
-            elif (participation % 4) == 2:
-                toot += str(int(participation / 4)) + "と2分の" + str(int((participation % 4) / 2)) + "回転でした。"
-            else:
-                toot += str(int(participation / 4)) + "と4分の" + str(participation % 4) + "回転でした。"
-        else:
-            #分数表記の判定
-            if (participation % 4) == 2:
-                toot += "2分の" + str(int((participation % 4) / 2)) + "回転でした。"
-            else:
-                toot += "4分の" + str(participation % 4) + "回転でした。"
+        #回転数を文章に書き起こす
+        toot += count_rotation(participation)
         #早回し判定
         if early_parti > 0:
             toot += "\nまた、2時30分になる前に回した人は" + str(early_parti) + "人"
@@ -83,36 +108,15 @@ def toot_number_rotated(participation, early_parti, multi_turn):
             if multi_turn > 0:
                 toot += "2度以上回した人は" + str(multi_turn) + "人です。"
 
-    #合計回転数について
-    f = open(PATH + "sum_number_rotated.txt")
-    sum_num_rotated = int(f.read())
-    f.close()
-    sum_num_rotated += participation
-    f = open(PATH + "sum_number_rotated.txt","w")
-    f.write(str(sum_num_rotated))
-    f.close()
-    toot += "\n今日までの回転の合計数は"
-    if sum_num_rotated >= 4:
-        #分数表記の判定
-        if (sum_num_rotated % 4) == 0:
-            toot += str(int(sum_num_rotated / 4)) + "回転です。"
-        elif (sum_num_rotated % 4) == 2:
-            toot += str(int(sum_num_rotated / 4)) + "と2分の" + str(int((sum_num_rotated % 4) / 2)) + "回転です。"
-        else:
-            toot += str(int(sum_num_rotated / 4)) + "と4分の" + str(sum_num_rotated % 4) + "回転です。"
-    else:
-        #分数表記の判定
-        if (sum_num_rotated % 4) == 2:
-            toot += "2分の" + str(int((sum_num_rotated % 4) / 2)) + "回転です。"
-        else:
-            toot += "4分の" + str(sum_num_rotated % 4) + "回転です。"
-    mastodon.toot(toot)
+    #合計回転数のカウント
+    toot += sum_number_rotated(participation)
+    mastodon.status_post(status = toot)
 
 ***REMOVED***
     #LTL
     #tootの取得
     toots = get_timeline(tl_type = "local")
-    #データの整形
+    #データの整形とズズズだけ拾う
     round_toots = select_toots(toots = toots)
 
     #複数回回した人を数える
@@ -160,7 +164,7 @@ def toot_number_rotated(participation, early_parti, multi_turn):
     #HTL用
     round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
     toots = get_timeline(tl_type = "home")
-    #round_toots = select_toots(toots = toots)
+
 
     ***REMOVED***
     取得したtootのリストから必要なtootを抜き出し、
