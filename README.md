@@ -1,6 +1,8 @@
 # mastodon-rendaino-tombstone
 
-Mastodonの東方インスタンス[gensokyo.cloud](https://gensokyo.cloud)で動いているbot,蓮台野の墓石([@Rendaino_tombstone](https://gensokyo.cloud/@Rendaino_tombstone))のプログラムです。
+Mastodonの東方インスタンス[gensokyo.town](https://gensokyo.town)で動いているbot,蓮台野の墓石([@Rendaino_tombstone@gensokyo.town](https://gensokyo.town/@Rendaino_tombstone))のプログラムです。
+
+動いてた（インスタンス: [gensokyo.cloud](https://gensokyo.cloud), アカウント: [@Rendaino_tombstone@gensokyo.cloud](https://gensokyo.cloud/@Rendaino_tombstone)）
 
 ### 競技について
 
