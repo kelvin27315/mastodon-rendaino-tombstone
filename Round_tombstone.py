@@ -28,7 +28,7 @@ def get_timeline(tl_type):
     while True:
         time = dt.time(toots[-1]["created_at"].hour, toots[-1]["created_at"].minute, toots[-1]["created_at"].second, toots[-1]["created_at"].microsecond)
         #取得したget_toots全てのtootが29分より前の場合終了
-        if time <= TIME29:
+        if time < TIME29:
             break
         m_id = toots[-1]["id"] -1
         toots = toots + mastodon.timeline(timeline = tl_type, max_id = m_id, limit = 40)
@@ -43,7 +43,7 @@ def select_toots(toots):
     round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
     for toot in toots:
         time = dt.time(toot["created_at"].hour, toot["created_at"].minute, toot["created_at"].second, toot["created_at"].microsecond)
-        if TIME29 <= time and time <= TIME31:
+        if TIME29 < time and time <= TIME31:
             if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
                 round_toots = round_toots.append(pd.DataFrame({
                     "username":[toot["account"]["username"]],
