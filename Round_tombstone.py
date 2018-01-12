@@ -43,7 +43,7 @@ def select_toots(toots):
     round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
     for toot in toots:
         time = dt.time(toot["created_at"].hour, toot["created_at"].minute, toot["created_at"].second, toot["created_at"].microsecond)
-        if TIME29 < time and time <= TIME31:
+        if TIME29 <= time and time < TIME31:
             if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
                 round_toots = round_toots.append(pd.DataFrame({
                     "username":[toot["account"]["username"]],
