@@ -79,12 +79,10 @@ def sum_number_rotated(participation):
     合計の回転数
     """
     #今までの回転数に今回の回転数を足して保存
-    f = open(PATH + "sum_number_rotated.txt")
-    sum_num_rotated = int(f.read()) + participation
-    f.close()
-    f = open(PATH + "sum_number_rotated.txt","w")
-    f.write(str(sum_num_rotated))
-    f.close()
+    with open(PATH + "sum_number_rotated.txt", "r") as f:
+        sum_num_rotated = int(f.read()) + participation
+    with open(PATH + "sum_number_rotated.txt","w") as f:
+        f.write(str(sum_num_rotated))
 
     toot = "\n今日までの回転の合計数は"
     toot += count_rotation(sum_num_rotated)
