@@ -68,8 +68,7 @@ class TestRoundTombstone(unittest.TestCase):
 
     def test_count_rotation_2_participations(self):
         toot = rt.count_rotation(2)
-# BUG: 1/2だけ1が全角になっている
-        self.assertEqual('2分の１回転です。', toot)
+        self.assertEqual('2分の1回転です。', toot)
 
     def test_count_rotation_4_participations(self):
         toot = rt.count_rotation(4)
