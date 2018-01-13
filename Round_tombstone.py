@@ -70,7 +70,7 @@ def count_rotation(rotation_count):
         if (rotation_count % 4) == 0:
             toot += "0回転です。"
         elif (rotation_count % 4) == 2:
-            toot += "2分の１回転です。"
+            toot += "2分の1回転です。"
         else:
             toot += "4分の" + str(rotation_count % 4) + "回転です。"
     return(toot)
