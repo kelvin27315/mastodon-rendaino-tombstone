@@ -5,6 +5,7 @@ import datetime as dt
 import pandas as pd
 
 PATH = path.dirname(path.abspath(__file__)) + "/"
+SUMFILE = 'sum_number_rotated.txt'
 round_toots = pd.DataFrame({"username":[],"display_name":[],"created_at":[]})
 TIME29 = dt.time(17,29,0,0)
 TIME30 = dt.time(17,30,0,0)
@@ -79,9 +80,9 @@ def sum_number_rotated(participation):
     合計の回転数
     """
     #今までの回転数に今回の回転数を足して保存
-    with open(PATH + "sum_number_rotated.txt", "r") as f:
+    with open(PATH + SUMFILE, "r") as f:
         sum_num_rotated = int(f.read()) + participation
-    with open(PATH + "sum_number_rotated.txt","w") as f:
+    with open(PATH + SUMFILE,"w") as f:
         f.write(str(sum_num_rotated))
 
     toot = "\n今日までの回転の合計数は"
