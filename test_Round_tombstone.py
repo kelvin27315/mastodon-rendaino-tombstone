@@ -13,6 +13,10 @@ class TestRoundTombstone(unittest.TestCase):
 # rt.mastodon をmockするので、元のが定義されていたら退避
         self.original_mastodon = rt.mastodon if hasattr(rt, 'mastodon') else None
         rt.mastodon = Mock(spec=mastodon.Mastodon)
+# sum_num_rotatedのためのファイル作成。本番のファイルを書き換えないようにテスト用のファイル名に差し替える
+        rt.SUMFILE = "sum_number_rotated_test.txt"
+        with open(rt.PATH + rt.SUMFILE,"w") as f:
+            f.write("42")
 
     def tearDown(self):
         rt.mastodon = self.original_mastodon
@@ -53,44 +57,59 @@ class TestRoundTombstone(unittest.TestCase):
         self.assertEqual(['reimu','marisa'], list(results['username']))
         self.assertEqual(['霊夢','魔理沙'], list(results['display_name']))
 
-# toot_number_rotatedについて、細かいケースごとにテスト
+# count_rotationのテスト
+    def test_count_rotation_no_participation(self):
+        toot = rt.count_rotation(0)
+        self.assertEqual('0回転です。', toot)
+
+    def test_count_rotation_1_participation(self):
+        toot = rt.count_rotation(1)
+        self.assertEqual('4分の1回転です。', toot)
+
+    def test_count_rotation_2_participations(self):
+        toot = rt.count_rotation(2)
+# BUG: 1/2だけ1が全角になっている
+        self.assertEqual('2分の１回転です。', toot)
+
+    def test_count_rotation_4_participations(self):
+        toot = rt.count_rotation(4)
+        self.assertEqual('1回転です。', toot)
+
+    def test_count_rotation_5_participations(self):
+        toot = rt.count_rotation(5)
+        self.assertEqual('1と4分の1回転です。', toot)
+
+    def test_count_rotation_6_participations(self):
+        toot = rt.count_rotation(6)
+        self.assertEqual('1と2分の1回転です。', toot)
+
+# toot_number_rotatedのテスト。細かい回転数ごとのテストはcount_rotationでカバーしている。
     def test_toot_number_rotated_no_participation(self):
         rt.toot_number_rotated(0, 0, 0)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石は回転しませんでした。')
+        rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石は回転しませんでした。\n'
+                                                        + '今日までの回転の合計数は10と2分の1回転です。')
 
     def test_toot_number_rotated_1_participation(self):
         rt.toot_number_rotated(1, 0, 0)
-# BUG: 4人未満の場合に余計な0が付く
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は1人による4分の1回転でした。')
-
-    def test_toot_number_rotated_2_participations(self):
-        rt.toot_number_rotated(2, 0, 0)
-# BUG: 4人未満の場合に余計な0が付く
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は2人による2分の1回転でした。')
-
-    def test_toot_number_rotated_4_participations(self):
-        rt.toot_number_rotated(4, 0, 0)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は4人による1回転でした。')
-
-    def test_toot_number_rotated_5_participations(self):
-        rt.toot_number_rotated(5, 0, 0)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は5人による1と4分の1回転でした。')
-
-    def test_toot_number_rotated_6_participations(self):
-        rt.toot_number_rotated(6, 0, 0)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は6人による1と2分の1回転でした。')
+        rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石の回転は1人による4分の1回転です。\n'
+                                                        + '今日までの回転の合計数は10と4分の3回転です。')
 
     def test_toot_number_rotated_early_participation(self):
         rt.toot_number_rotated(6, 1, 0)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は6人による1と2分の1回転でした。\nまた、2時30分になる前に回した人は1人です。')
+        rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石の回転は6人による1と2分の1回転です。\n'
+                                                        + 'また、2時30分になる前に回した人は1人です。\n'
+                                                        + '今日までの回転の合計数は12回転です。')
 
     def test_toot_number_rotated_multi_turn(self):
         rt.toot_number_rotated(6, 0, 1)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は6人による1と2分の1回転でした。2度以上回した人は1人です。')
+        rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石の回転は6人による1と2分の1回転です。2度以上回した人は1人です。\n'
+                                                        + '今日までの回転の合計数は12回転です。')
 
     def test_toot_number_rotated_early_participation_and_multi_turn(self):
         rt.toot_number_rotated(6, 1, 1)
-        rt.mastodon.status_post.assert_called_once_with(TODAY_STR + 'の墓石の回転は6人による1と2分の1回転でした。\nまた、2時30分になる前に回した人は1人、2度以上回した人は1人です。')
+        rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石の回転は6人による1と2分の1回転です。\n'
+                                                        + 'また、2時30分になる前に回した人は1人、2度以上回した人は1人です。\n'
+                                                        + '今日までの回転の合計数は12回転です。')
 
 if __name__ == '__main__':
     unittest.main()
