@@ -2,8 +2,9 @@
 import unittest
 from unittest.mock import Mock
 import Round_tombstone as rt
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timezone ,time
 import mastodon
+import pandas as pd
 
 TODAY_STR = '{dt.month}月{dt.day}日'.format(dt = date.today())
 UTC = timezone.utc
@@ -109,6 +110,14 @@ class TestRoundTombstone(unittest.TestCase):
         rt.mastodon.status_post.assert_called_once_with(status = TODAY_STR + 'の墓石の回転は6人による1と2分の1回転です。\n'
                                                         + 'また、2時30分になる前に回した人は1人、2度以上回した人は1人です。\n'
                                                         + '今日までの回転の合計数は12回転です。')
+
+    def test_toot_ranking(self):
+        rt.toot_ranking(rotated_just = pd.DataFrame({
+            "username":['akyu','kosuzu','reimu', 'marisa'],
+            "display_name":['阿求','小鈴','霊夢', '魔理沙'],
+            "created_at":[time(17,30,0,0), time(17,30,1,0), time(17,30,1,0), time(17,30,2,0)]
+        }))
+        rt.mastodon.status_post.assert_called_once_with(status = '1位：阿求 @akyu [02:30:00]\n2位：小鈴 @kosuzu [02:30:01]\n2位：霊夢 @reimu [02:30:01]\n4位：魔理沙 @marisa [02:30:02]\n', visibility='unlisted')
 
 if __name__ == '__main__':
     unittest.main()
