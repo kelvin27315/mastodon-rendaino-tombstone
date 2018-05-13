@@ -121,9 +121,9 @@ def toot_ranking(rotated_just):
     for i,rank in rotated_just.iterrows():
         #一個前のtootと時刻が同じだったら順位を一個前のと同じにする
         if rank["created_at"] == temp_time:
-            temp = str(int(str(temp_i))+1) + "位：" + rank["display_name"] + " @" + rank["username"] + " [02" + str(rank["created_at"])[2:12] +"]\n"
+            temp = str(int(str(temp_i))+1) + "位: " + rank["display_name"] + " @" + rank["username"] + " [02" + str(rank["created_at"])[2:12] +"]\n"
         else:
-            temp = str(int(str(i))+1) + "位：" + rank["display_name"] + " @" + rank["username"] + " [02" + str(rank["created_at"])[2:12] +"]\n"
+            temp = str(int(str(i))+1) + "位: " + rank["display_name"] + " @" + rank["username"] + " [02" + str(rank["created_at"])[2:12] +"]\n"
             temp_time = rank["created_at"]
             temp_i = i
         if len(toot) + len(temp) >= 500:

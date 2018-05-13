@@ -117,7 +117,7 @@ class TestRoundTombstone(unittest.TestCase):
             "display_name":['阿求','小鈴','霊夢', '魔理沙'],
             "created_at":[time(17,30,0,0), time(17,30,1,0), time(17,30,1,0), time(17,30,2,0)]
         }))
-        rt.mastodon.status_post.assert_called_once_with(status = '1位：阿求 @akyu [02:30:00]\n2位：小鈴 @kosuzu [02:30:01]\n2位：霊夢 @reimu [02:30:01]\n4位：魔理沙 @marisa [02:30:02]\n', visibility='unlisted')
+        rt.mastodon.status_post.assert_called_once_with(status = '1位: 阿求 @akyu [02:30:00]\n2位: 小鈴 @kosuzu [02:30:01]\n2位: 霊夢 @reimu [02:30:01]\n4位: 魔理沙 @marisa [02:30:02]\n', visibility='unlisted')
 
 if __name__ == '__main__':
     unittest.main()
