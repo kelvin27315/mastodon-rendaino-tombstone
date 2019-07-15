@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
-install:
-  - pip install -r requirements.txt
-script: python -m unittest
+  - "3.7"
+install: "make"
+script:
+  - make test
