@@ -3,3 +3,4 @@ sum_number_rotated.txt
 sum_number_rotated_test.txt
 __pycache__/
 .venv/
+.vscode/
