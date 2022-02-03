@@ -13,7 +13,7 @@ UTC = timezone.utc
 
 
 class TestRoundTombstone(unittest.TestCase):
-    def setUp(self***REMOVED***
+    def setUp(self) -> None:
         # rt.mastodon をmockするので、元のが定義されていたら退避
         self.original_mastodon = rt.mastodon if hasattr(rt, "mastodon") else None
         rt.mastodon = Mock(spec=mastodon.Mastodon)
@@ -22,10 +22,10 @@ class TestRoundTombstone(unittest.TestCase):
         with open(rt.PATH + rt.SUMFILE, "w") as f:
             f.write("42")
 
-    def tearDown(self***REMOVED***
+    def tearDown(self) -> None:
         rt.mastodon = self.original_mastodon
 
-    def test_get_timeline(self***REMOVED***
+    def test_get_timeline(self) -> None:
         rt.mastodon.timeline.side_effect = [
             # timeline取得 1回目
             [
@@ -97,7 +97,7 @@ class TestRoundTombstone(unittest.TestCase):
         # mastodon APIの呼び出し回数検証
         self.assertEqual(2, len(rt.mastodon.timeline.mock_calls))
 
-    def test_select_toots(self***REMOVED***
+    def test_select_toots(self) -> None:
         toots = [
             # positive
             Toot(
@@ -110,7 +110,7 @@ class TestRoundTombstone(unittest.TestCase):
                         "display_name": "霊夢",
                     },
                 }
-        ***REMOVED***,
+            ),
             Toot(
                 **{
                     "id": 11,
@@ -121,7 +121,7 @@ class TestRoundTombstone(unittest.TestCase):
                         "display_name": "魔理沙",
                     },
                 }
-        ***REMOVED***,
+            ),
             # negative
             Toot(
                 **{
@@ -133,75 +133,75 @@ class TestRoundTombstone(unittest.TestCase):
                         "display_name": "小鈴",
                     },
                 }
-        ***REMOVED***,
+            ),
         ]
         results = rt.select_toots(toots)
         self.assertEqual(["reimu", "marisa"], list(results.username))
         self.assertEqual(["霊夢", "魔理沙"], list(results.display_name))
 
     # count_rotationのテスト
-    def test_count_rotation_no_participation(self***REMOVED***
+    def test_count_rotation_no_participation(self) -> None:
         toot = rt.count_rotation(0)
         self.assertEqual("0回転です。", toot)
 
-    def test_count_rotation_1_participation(self***REMOVED***
+    def test_count_rotation_1_participation(self) -> None:
         toot = rt.count_rotation(1)
         self.assertEqual("4分の1回転です。", toot)
 
-    def test_count_rotation_2_participations(self***REMOVED***
+    def test_count_rotation_2_participations(self) -> None:
         toot = rt.count_rotation(2)
         self.assertEqual("2分の1回転です。", toot)
 
-    def test_count_rotation_4_participations(self***REMOVED***
+    def test_count_rotation_4_participations(self) -> None:
         toot = rt.count_rotation(4)
         self.assertEqual("1回転です。", toot)
 
-    def test_count_rotation_5_participations(self***REMOVED***
+    def test_count_rotation_5_participations(self) -> None:
         toot = rt.count_rotation(5)
         self.assertEqual("1と4分の1回転です。", toot)
 
-    def test_count_rotation_6_participations(self***REMOVED***
+    def test_count_rotation_6_participations(self) -> None:
         toot = rt.count_rotation(6)
         self.assertEqual("1と2分の1回転です。", toot)
 
     # toot_number_rotatedのテスト。細かい回転数ごとのテストはcount_rotationでカバーしている。
-    def test_toot_number_rotated_no_participation(self***REMOVED***
+    def test_toot_number_rotated_no_participation(self) -> None:
         rt.toot_number_rotated(0, 0, 0)
         rt.mastodon.status_post.assert_called_once_with(
             status=TODAY_STR + "の墓石は回転しませんでした。\n" + "今日までの回転の合計数は10と2分の1回転です。"
-    ***REMOVED***
+        )
 
-    def test_toot_number_rotated_1_participation(self***REMOVED***
+    def test_toot_number_rotated_1_participation(self) -> None:
         rt.toot_number_rotated(1, 0, 0)
         rt.mastodon.status_post.assert_called_once_with(
             status=TODAY_STR + "の墓石の回転は1人による4分の1回転です。\n" + "今日までの回転の合計数は10と4分の3回転です。"
-    ***REMOVED***
+        )
 
-    def test_toot_number_rotated_early_participation(self***REMOVED***
+    def test_toot_number_rotated_early_participation(self) -> None:
         rt.toot_number_rotated(6, 1, 0)
         rt.mastodon.status_post.assert_called_once_with(
             status=TODAY_STR
             + "の墓石の回転は6人による1と2分の1回転です。\n"
             + "また、2時30分になる前に回した人は1人です。\n"
             + "今日までの回転の合計数は12回転です。"
-    ***REMOVED***
+        )
 
-    def test_toot_number_rotated_multi_turn(self***REMOVED***
+    def test_toot_number_rotated_multi_turn(self) -> None:
         rt.toot_number_rotated(6, 0, 1)
         rt.mastodon.status_post.assert_called_once_with(
             status=TODAY_STR + "の墓石の回転は6人による1と2分の1回転です。2度以上回した人は1人です。\n" + "今日までの回転の合計数は12回転です。"
-    ***REMOVED***
+        )
 
-    def test_toot_number_rotated_early_participation_and_multi_turn(self***REMOVED***
+    def test_toot_number_rotated_early_participation_and_multi_turn(self) -> None:
         rt.toot_number_rotated(6, 1, 1)
         rt.mastodon.status_post.assert_called_once_with(
             status=TODAY_STR
             + "の墓石の回転は6人による1と2分の1回転です。\n"
             + "また、2時30分になる前に回した人は1人、2度以上回した人は1人です。\n"
             + "今日までの回転の合計数は12回転です。"
-    ***REMOVED***
+        )
 
-    def test_toot_ranking(self***REMOVED***
+    def test_toot_ranking(self) -> None:
         rt.toot_ranking(
             rotated_just=pd.DataFrame(
                 {
@@ -214,12 +214,12 @@ class TestRoundTombstone(unittest.TestCase):
                         time(17, 30, 2, 0),
                     ],
                 }
-        ***REMOVED***
-    ***REMOVED***
+            )
+        )
         rt.mastodon.status_post.assert_called_once_with(
             status="1位: 阿求 @akyu [02:30:00]\n"
             + "2位: 小鈴 @kosuzu [02:30:01]\n"
             + "2位: 霊夢 @reimu [02:30:01]\n"
             + "4位: 魔理沙 @marisa [02:30:02]\n",
             visibility="unlisted",
-    ***REMOVED***
+        )
