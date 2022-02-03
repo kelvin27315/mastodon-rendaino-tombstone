@@ -20,6 +20,6 @@ jobs:
       - name: Installing dependencises using poetry
         run: poetry install
       - name: Test
-        run: poetry run python rendaino_tombstone/test_Round_tombstone.py
+        run: make test
       - name: run lint
         run: poetry run pysen run lint

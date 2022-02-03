@@ -30,4 +30,4 @@ line_length = 100
 py_version = "py37"
 
 [[tool.pysen.lint.mypy_targets]]
-paths = ["./rendaino_tombstone"]
+paths = ["./rendaino_tombstone", "./tests"]
