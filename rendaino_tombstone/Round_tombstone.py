@@ -1,9 +1,11 @@
 import datetime as dt
 from operator import itemgetter
 ***REMOVED***
+from typing import List
 
 import pandas as pd
 ***REMOVED***
+from rendaino_tombstone.toot import Toot, Visibility
 
 ***REMOVED***
 SUMFILE = "sum_number_rotated.txt"
@@ -22,7 +24,7 @@ multi_turn = 0
 ***REMOVED***
 
 
-def get_timeline(tl_type):
+def get_timeline(tl_type: str) -> List[Toot]:
     ***REMOVED***
     タイムラインから2:29分までのtootを集めてくる関数
     tl_typeには取得するタイムラインの種類を渡す。(home, local, public tag/hashtagのいずれか)
@@ -42,10 +44,11 @@ def get_timeline(tl_type):
         m_id = toots[-1]["id"] - 1
         toots = toots + mastodon.timeline(timeline=tl_type, max_id=m_id, limit=40)
     toots = sorted(toots, key=itemgetter("created_at"))
-    return toots
+    typed_toots = [Toot(**toot) for toot in toots]
+    return typed_toots
 
 
-def select_toots(toots):
+def select_toots(toots: List[Toot]) -> pd.DataFrame:
     ***REMOVED***
     取得したtootのリストから必要なtootを抜き出し、
     必要な要素のラベルで構成されたDataFrameに落とし込む
@@ -53,18 +56,18 @@ def select_toots(toots):
     round_toots = pd.DataFrame({"username": [], "display_name": [], "created_at": []})
     for toot in toots:
         time = dt.time(
-            toot["created_at"].hour,
-            toot["created_at"].minute,
-            toot["created_at"].second,
-            toot["created_at"].microsecond,
+            toot.created_at.hour,
+            toot.created_at.minute,
+            toot.created_at.second,
+            toot.created_at.microsecond,
     ***REMOVED***
         if TIME29 <= time and time < TIME31:
-            if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
+            if "ｽﾞｽﾞｽﾞ" in toot.content or "ズズズ" in toot.content or "ずずず" in toot.content:
                 round_toots = round_toots.append(
                     pd.DataFrame(
                         {
-                            "username": [toot["account"]["username"]],
-                            "display_name": [toot["account"]["display_name"]],
+                            "username": [toot.account["username"]],
+                            "display_name": [toot.account["display_name"]],
                             "created_at": [time],
                         }
                 ***REMOVED***
@@ -72,7 +75,7 @@ def select_toots(toots):
     return round_toots
 
 
-def count_rotation(rotation_count):
+def count_rotation(rotation_count: int) -> str:
     ***REMOVED***
     回転数についての文を作る。
     ***REMOVED***
@@ -96,7 +99,7 @@ def count_rotation(rotation_count):
     return toot
 
 
-def sum_number_rotated(participation):
+def sum_number_rotated(participation: int) -> str:
     ***REMOVED***
     合計の回転数
     ***REMOVED***
@@ -111,67 +114,59 @@ def sum_number_rotated(participation):
     return toot
 
 
-def toot_number_rotated(participation, early_parti, multi_turn):
+def toot_number_rotated(participation: int, early_parti: int, multi_turn: int***REMOVED***
     # 回転の有無の判定
     if participation == 0:
-        toot = str(TODAY.month) + "月" + str(TODAY.day) + "日の墓石は回転しませんでした。"
+        post = str(TODAY.month) + "月" + str(TODAY.day) + "日の墓石は回転しませんでした。"
     else:
-        toot = str(TODAY.month) + "月" + str(TODAY.day) + "日の墓石の回転は" + str(participation) + "人による"
+        post = str(TODAY.month) + "月" + str(TODAY.day) + "日の墓石の回転は" + str(participation) + "人による"
         # 回転数を文章に書き起こす
-        toot += count_rotation(participation)
+        post += count_rotation(participation)
         # 早回し判定
         if early_parti > 0:
-            toot += "\nまた、2時30分になる前に回した人は" + str(early_parti) + "人"
+            post += "\nまた、2時30分になる前に回した人は" + str(early_parti) + "人"
             if multi_turn > 0:
-                toot += "、2度以上回した人は" + str(multi_turn) + "人"
-            toot += "です。"
+                post += "、2度以上回した人は" + str(multi_turn) + "人"
+            post += "です。"
         else:
             if multi_turn > 0:
-                toot += "2度以上回した人は" + str(multi_turn) + "人です。"
+                post += "2度以上回した人は" + str(multi_turn) + "人です。"
 
     # 合計回転数のカウント
-    toot += sum_number_rotated(participation)
-    mastodon.status_post(status=toot)
+    post += sum_number_rotated(participation)
+    mastodon.status_post(status=post)
 
 
-def toot_ranking(rotated_just):
+def toot_ranking(rotated_just: pd.DataFrame***REMOVED***
     ***REMOVED***
     tootのランキングを投稿する
     ***REMOVED***
-    toot = ""
+    post = ""
     temp_time = dt.time(17, 27, 41, 0)
     temp_i = -1
     for i, rank in rotated_just.iterrows():
         # 一個前のtootと時刻が同じだったら順位を一個前のと同じにする
         if rank["created_at"] == temp_time:
-            temp = (
-                str(int(str(temp_i)) + 1)
-                + "位: "
-                + rank["display_name"]
-                + " @"
-                + rank["username"]
-                + " [02"
-                + str(rank["created_at"])[2:12]
-                + "]\n"
+            temp = "{}位: {} @{} [02{}]\n".format(
+                int(str(temp_i)) + 1,
+                rank["display_name"],
+                rank["username"],
+                str(rank["created_at"])[2:12],
         ***REMOVED***
         else:
-            temp = (
-                str(int(str(i)) + 1)
-                + "位: "
-                + rank["display_name"]
-                + " @"
-                + rank["username"]
-                + " [02"
-                + str(rank["created_at"])[2:12]
-                + "]\n"
+            temp = "{}位: {} @{} [02{}]\n".format(
+                int(str(i)) + 1,
+                rank["display_name"],
+                rank["username"],
+                str(rank["created_at"])[2:12],
         ***REMOVED***
             temp_time = rank["created_at"]
             temp_i = i
-        if len(toot) + len(temp) >= 500:
-            mastodon.status_post(status=toot, visibility="unlisted")
-            toot = ""
-        toot += temp
-    mastodon.status_post(status=toot, visibility="unlisted")
+        if len(post) + len(temp) >= 500:
+            mastodon.status_post(status=post, visibility="unlisted")
+            post = ""
+        post += temp
+    mastodon.status_post(status=post, visibility="unlisted")
 
 
 ***REMOVED***
@@ -206,21 +201,21 @@ def toot_ranking(rotated_just):
 
     # 早回し表記
     if early_parti > 0:
-        toot = "2時30分より前に回したtootです。\n"
-        for i, rank in rotated_early.iterrows():
+        post = "2時30分より前に回したtootです。\n"
+        for rank in rotated_early.itertuples(index=False):
             temp = (
-                rank["display_name"]
+                rank.display_name
                 + " @"
-                + rank["username"]
+                + rank.username
                 + " [02"
-                + str(rank["created_at"])[2:12]
+                + str(rank.created_at)[2:12]
                 + "]\n"
         ***REMOVED***
-            if len(toot) + len(temp) >= 500:
-                mastodon.status_post(status=toot, visibility="unlisted")
-                toot = "2時30分より前に回したtoot、続き。\n"
-            toot += temp
-        mastodon.status_post(status=toot, visibility="unlisted")
+            if len(post) + len(temp) >= 500:
+                mastodon.status_post(status=post, visibility="unlisted")
+                post = "2時30分より前に回したtoot、続き。\n"
+            post += temp
+        mastodon.status_post(status=post, visibility="unlisted")
 
     # HTL用
     round_toots = pd.DataFrame({"username": [], "display_name": [], "created_at": []})
@@ -232,23 +227,19 @@ def toot_ranking(rotated_just):
     ***REMOVED***
     for toot in toots:
         time = dt.time(
-            toot["created_at"].hour,
-            toot["created_at"].minute,
-            toot["created_at"].second,
-            toot["created_at"].microsecond,
+            toot.created_at.hour,
+            toot.created_at.minute,
+            toot.created_at.second,
+            toot.created_at.microsecond,
     ***REMOVED***
         if TIME29 <= time and time <= TIME31:
-            if "public" != toot["visibility"]:
-                if (
-                    "ｽﾞｽﾞｽﾞ" in toot["content"]
-                    or "ズズズ" in toot["content"]
-                    or "ずずず" in toot["content"]
-            ***REMOVED***:
+            if Visibility.public != toot.visibility:
+                if "ｽﾞｽﾞｽﾞ" in toot.content or "ズズズ" in toot.content or "ずずず" in toot.content:
                     round_toots = round_toots.append(
                         pd.DataFrame(
                             {
-                                "username": [toot["account"]["username"]],
-                                "display_name": [toot["account"]["display_name"]],
+                                "username": [toot.account.username],
+                                "display_name": [toot.account.display_name],
                                 "created_at": [time],
                             }
                     ***REMOVED***
@@ -261,16 +252,16 @@ def toot_ranking(rotated_just):
 
     # 時刻報告
     if participation > 0:
-        toot = ""
-        for i, rank in round_toots.iterrows():
-            toot = (
+        post = ""
+        for rank in round_toots.itertuples(index=False):
+            post = (
                 "@"
-                + rank["username"]
+                + rank.username
                 + " "
-                + rank["display_name"]
+                + rank.display_name
                 + " [02"
-                + str(rank["created_at"])[2:12]
+                + str(rank.created_at)[2:12]
                 + "]\n"
         ***REMOVED***
-            mastodon.status_post(status=toot, visibility="direct")
-            toot = ""
+            mastodon.status_post(status=post, visibility="direct")
+            post = ""

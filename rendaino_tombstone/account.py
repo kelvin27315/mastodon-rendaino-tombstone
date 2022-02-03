@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-from datetime import datetime
-from typing import List, Any, Optional
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Any, List, Optional
 
 
 @dataclass
@@ -9,27 +9,27 @@ class Field:
     value: str
     verified_at: Optional[str]
 
+
 @dataclass
 class Account:
     id: int
     username: str
-    acct: str
     display_name: str
-    locked: bool
-    bot: bool
-    discoverable: bool
-    group: bool
-    created_at: datetime
-    note: str
-    url: str
-    avatar: str
-    avatar_static: str
-    header: str
-    header_static: str
-    followers_count: int
-    following_count: int
-    statuses_count: int
-    last_status_at: datetime
-    emojis: List[Any]
-    fields: List[Field]
-
+    acct: str = ""
+    locked: bool = False
+    bot: bool = False
+    discoverable: bool = True
+    group: bool = False
+    created_at: datetime = datetime(2000, 1, 1, 0, 0, 0, 0, timezone.utc)
+    note: str = ""
+    url: str = ""
+    avatar: str = ""
+    avatar_static: str = ""
+    header: str = ""
+    header_static: str = ""
+    followers_count: int = 0
+    following_count: int = 0
+    statuses_count: int = 0
+    last_status_at: datetime = datetime(2000, 1, 1, 0, 0, 0, 0, timezone.utc)
+    emojis: List[Any] = field(default_factory=list)
+    fields: List[Field] = field(default_factory=list)
