@@ -21,4 +21,4 @@ jobs:
         run: |
           poetry install
       - name: Test
-        run: poetry run python test_Round_tombstone.py
+        run: poetry run python rendaino_tombstone/test_Round_tombstone.py
