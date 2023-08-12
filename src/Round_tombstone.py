@@ -45,7 +45,7 @@ def get_timeline(tl_type):
     return toots
 
 
-def select_toots(toots):
+def select_toots(toots) -> pd.DataFrame:
     """
     取得したtootのリストから必要なtootを抜き出し、
     必要な要素のラベルで構成されたDataFrameに落とし込む
@@ -60,19 +60,22 @@ def select_toots(toots):
         )
         if TIME29 <= time and time < TIME31:
             if "ｽﾞｽﾞｽﾞ" in toot["content"] or "ズズズ" in toot["content"] or "ずずず" in toot["content"]:
-                round_toots = round_toots.append(
-                    pd.DataFrame(
-                        {
-                            "username": [toot["account"]["username"]],
-                            "display_name": [toot["account"]["display_name"]],
-                            "created_at": [time],
-                        }
-                    )
+                round_toots = pd.concat(
+                    [
+                        round_toots,
+                        pd.DataFrame(
+                            {
+                                "username": [toot["account"]["username"]],
+                                "display_name": [toot["account"]["display_name"]],
+                                "created_at": [time],
+                            }
+                        ),
+                    ]
                 )
     return round_toots
 
 
-def count_rotation(rotation_count):
+def count_rotation(rotation_count: int) -> str:
     """
     回転数についての文を作る。
     """
@@ -96,7 +99,7 @@ def count_rotation(rotation_count):
     return toot
 
 
-def sum_number_rotated(participation):
+def sum_number_rotated(participation) -> str:
     """
     合計の回転数
     """
@@ -111,7 +114,7 @@ def sum_number_rotated(participation):
     return toot
 
 
-def toot_number_rotated(participation, early_parti, multi_turn):
+def toot_number_rotated(participation, early_parti, multi_turn) -> None:
     # 回転の有無の判定
     if participation == 0:
         toot = str(TODAY.month) + "月" + str(TODAY.day) + "日の墓石は回転しませんでした。"
@@ -134,7 +137,7 @@ def toot_number_rotated(participation, early_parti, multi_turn):
     mastodon.status_post(status=toot)
 
 
-def toot_ranking(rotated_just):
+def toot_ranking(rotated_just) -> None:
     """
     tootのランキングを投稿する
     """
