@@ -5,4 +5,4 @@ format:
 	poetry run pysen run format
 
 test:
-	pipenv run python -m unittest
+	poetry run python -m unittest discover -v -s ./tests
