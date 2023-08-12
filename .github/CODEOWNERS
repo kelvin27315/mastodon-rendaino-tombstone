@@ -1,0 +1,5 @@
+* @kelvin27315
+
+# 自動マージのために指定しない
+/pyproject.toml
+/poetry.lock
