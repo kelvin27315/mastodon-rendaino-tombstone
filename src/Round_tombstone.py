@@ -177,7 +177,7 @@ def toot_ranking(rotated_just) -> None:
     mastodon.status_post(status=toot, visibility="unlisted")
 
 
-if __name__ == "__main__":
+def main():
     # LTL
     # tootの取得
     toots = get_timeline(tl_type="local")
@@ -185,6 +185,7 @@ if __name__ == "__main__":
     round_toots = select_toots(toots=toots)
 
     # 複数回回した人を数える
+    multi_turn = 0
     for i in round_toots["username"].value_counts():
         if i > 1:
             multi_turn += 1
