@@ -8,8 +8,8 @@ readme = "README.md"
 repository = "https://github.com/kelvin27315/mastodon-rendaino-tombstone"
 
 [tool.poetry.dependencies]
-python = "^3.11.4"
-pandas = "^2.0.3"
+python = "3.11.6"
+pandas = "^2.1.0"
 mastodon-py = "^1.8.1"
 
 
