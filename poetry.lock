@@ -320,14 +320,14 @@ colors = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "mastodon-py"
-version = "1.8.1"
+version = "2.0.1"
 description = "Python wrapper for the Mastodon API"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "Mastodon.py-1.8.1-py2.py3-none-any.whl", hash = "sha256:22bc7e060518ef2eaa69d911cde6e4baf56bed5ea0dd407392c49051a7ac526a"},
-    {file = "Mastodon.py-1.8.1.tar.gz", hash = "sha256:4a64cb94abadd6add73e4b8eafdb5c466048fa5f638284fd2189034104d4687e"},
+    {file = "mastodon_py-2.0.1-py3-none-any.whl", hash = "sha256:5bb543ecbd7526bd50675d5d617ec04caa6b10d4002454cbf5641ad612723455"},
+    {file = "mastodon_py-2.0.1.tar.gz", hash = "sha256:f0a9cf59071347c7ff2ee49487d2520ca661f349f369b68845bdf3e43db1fff3"},
 ]
 
 [package.dependencies]
@@ -337,12 +337,13 @@ python-dateutil = "*"
 python-magic = {version = "*", markers = "platform_system != \"Windows\""}
 python-magic-bin = {version = "*", markers = "platform_system == \"Windows\""}
 requests = ">=2.4.2"
-six = "*"
 
 [package.extras]
 blurhash = ["blurhash (>=1.1.4)"]
-test = ["blurhash (>=1.1.4)", "cryptography (>=1.6.0)", "http-ece (>=1.0.5)", "pytest", "pytest-cov", "pytest-mock", "pytest-runner", "pytest-vcr", "pytz", "requests-mock", "vcrpy"]
-webpush = ["cryptography (>=1.6.0)", "http-ece (>=1.0.5)"]
+docs = ["sphinx-rtd-theme"]
+test = ["pytest", "pytest-cov", "pytest-mock", "pytest-retry", "pytest-vcr", "pytz", "requests-mock", "vcrpy"]
+test-old = ["pytest", "pytest-cov", "pytest-mock", "pytest-vcr", "pytz", "requests-mock", "vcrpy"]
+webpush = ["cryptography (>=1.6.0)", "http_ece (>=1.0.5)"]
 
 [[package]]
 name = "mccabe"
@@ -801,4 +802,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "3.11.6"
-content-hash = "a05c3d04274c5b5038c1c679fccd8cc43527ad523f41b5f3d02c89aa1c4e125c"
+content-hash = "c20fbc286b2a5a3d74591c0b5299048b9f40448d311501cf9ec1af76887b5547"
