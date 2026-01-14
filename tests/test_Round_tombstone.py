@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 from datetime import date, datetime, time, timezone
 from unittest.mock import Mock
