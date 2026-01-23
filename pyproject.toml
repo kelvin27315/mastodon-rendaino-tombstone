@@ -9,7 +9,7 @@ repository = "https://github.com/kelvin27315/mastodon-rendaino-tombstone"
 
 [tool.poetry.dependencies]
 python = "3.11.6"
-pandas = "^2.2.3"
+pandas = "^3.0.0"
 mastodon-py = "^1.8.1"
 
 
