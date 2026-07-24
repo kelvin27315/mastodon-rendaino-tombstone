@@ -782,14 +782,14 @@ files = [
 
 [[package]]
 name = "pysen"
-version = "0.12.0"
+version = "0.12.1"
 description = "Python linting made easy. Also a casual yet honorific way to address individuals who have entered an organization prior to you."
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pysen-0.12.0-py3-none-any.whl", hash = "sha256:15bf5d63d073f6e95db7f12949d66fdd839d9adc0b6ca7b3e7963b02d75f5028"},
-    {file = "pysen-0.12.0.tar.gz", hash = "sha256:010a7c0f17eada41eb87933f85de6c8f906c4c25b99236a2c21616de10a7df2a"},
+    {file = "pysen-0.12.1-py3-none-any.whl", hash = "sha256:8e82735b5e5758dc8e26c1cdff7d5a6ea06a49a986350e73b41bde2ad764b2ec"},
+    {file = "pysen-0.12.1.tar.gz", hash = "sha256:c08478f96b6dce3ebad19fbc88a9ae409f32ae2d7d2e6beff00e30f686db713b"},
 ]
 
 [package.dependencies]
