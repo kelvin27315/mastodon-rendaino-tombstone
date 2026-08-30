@@ -8,10 +8,10 @@ from mastodon import Mastodon
 PATH = path.dirname(path.abspath(__file__)) + "/"
 SUMFILE = "sum_number_rotated.txt"
 round_toots = pd.DataFrame({"username": [], "display_name": [], "created_at": []})
-TIME29 = dt.time(17, 29, 0, 0)
-TIME30 = dt.time(17, 30, 0, 0)
-TIME31 = dt.time(17, 31, 0, 0)
 TODAY = dt.date.today()  # 今日の日付
+TIME29 = dt.datetime(TODAY.year, TODAY.month, TODAY.day, 17, 29, 0, 0)
+TIME30 = dt.datetime(TODAY.year, TODAY.month, TODAY.day, 17, 30, 0, 0)
+TIME31 = dt.datetime(TODAY.year, TODAY.month, TODAY.day, 17, 31, 0, 0)
 multi_turn = 0
 
 if __name__ == "__main__":
@@ -176,8 +176,9 @@ def toot_ranking(rotated_just) -> None:
         toot += temp
     mastodon.status_post(status=toot, visibility="unlisted")
 
+from collections import Counter
 
-if __name__ == "__main__":
+def main():
     # LTL
     # tootの取得
     toots = get_timeline(tl_type="local")
@@ -185,9 +186,8 @@ if __name__ == "__main__":
     round_toots = select_toots(toots=toots)
 
     # 複数回回した人を数える
-    for i in round_toots["username"].value_counts():
-        if i > 1:
-            multi_turn += 1
+    c = Counter([toot.username for toot in round_toots])
+    multi_turn = len([count for count in c.values() if 1 < count])
 
     # 人数のダブりを削る
     round_toots = round_toots.drop_duplicates(["username"])
